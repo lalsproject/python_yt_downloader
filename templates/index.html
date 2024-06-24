@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+/*            padding-top: 3rem;*/
+            padding-bottom: 3rem;
+        }
+        #loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav style="margin-bottom: 20px;">
+        <div class="nav-wrapper teal">
+            <a href="#" class="brand-logo center">YouTube Downloader</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <form id="download-form">
+                    <div class="input-field">
+                        <input id="url" type="text" class="validate" placeholder="Enter YouTube video URL" required>
+                        <label for="url">YouTube Video URL</label>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Download
+                        <i class="material-icons right">cloud_download</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="progress col s12" id="loading" style="display: none;">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-image">
+                        <img id="thumbnail" class="thumbnail">
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6" id="download-link" style="display: none;">
+                <p>Download Link:</p>
+                <h5 id="video-title"></h5>
+                <a id="video-url" href="" download class="btn waves-effect waves-light">Download Video</a>
+            </div>
+        </div>
+       
+    </div>
+    
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.getElementById('download-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var url = document.getElementById('url').value;
+            if (!url) {
+                M.toast({html: 'Please enter a valid YouTube video URL.', classes: 'red'});
+                return;
+            }
+            showLoading();
+            var formData = new FormData();
+            formData.append('url', url);
+            fetch('/download', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.error) {
+                    M.toast({html: 'Error: ' + data.error, classes: 'red'});
+                } else {
+                    document.getElementById('video-title').textContent = data.title;
+                    document.getElementById('thumbnail').src = data.thumbnail;
+                    var filename = data.title + '.mp4';
+                    document.getElementById('video-url').setAttribute('download', filename);
+                    document.getElementById('video-url').href = data.url;
+                    document.getElementById('download-link').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                M.toast({html: 'Error: ' + error, classes: 'red'});
+            });
+        });
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
