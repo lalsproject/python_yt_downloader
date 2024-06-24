@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
-/*            padding-top: 3rem;*/
             padding-bottom: 3rem;
         }
         #loading {
@@ -57,7 +56,6 @@
                 <a id="video-url" href="" download class="btn waves-effect waves-light">Download Video</a>
             </div>
         </div>
-       
     </div>
     
     <!-- Materialize JavaScript -->
@@ -66,13 +64,17 @@
         document.getElementById('download-form').addEventListener('submit', function(event) {
             event.preventDefault();
             var url = document.getElementById('url').value;
+
             if (!url) {
                 M.toast({html: 'Please enter a valid YouTube video URL.', classes: 'red'});
                 return;
             }
+
             showLoading();
+
             var formData = new FormData();
             formData.append('url', url);
+
             fetch('/download', {
                 method: 'POST',
                 body: formData
@@ -85,9 +87,11 @@
                 } else {
                     document.getElementById('video-title').textContent = data.title;
                     document.getElementById('thumbnail').src = data.thumbnail;
-                    var filename = data.title + '.mp4';
+                    var filename = data.title.replace(/[^a-zA-Z0-9]/g, '_') + '.mp4'; // Mengganti karakter tidak valid pada nama file
+                    document.getElementById('video-url').setAttribute('href', data.url+"&title="+data.title);
                     document.getElementById('video-url').setAttribute('download', filename);
-                    document.getElementById('video-url').href = data.url;
+
+
                     document.getElementById('download-link').style.display = 'block';
                 }
             })

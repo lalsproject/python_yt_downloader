@@ -37,7 +37,7 @@ A simple web application to fetch and download YouTube video information using Q
 
 1. Run the application:
     ```sh
-    python app.py
+    python main.py
     ```
 
 2. Open your web browser and go to `http://0.0.0.0:5000/`.
