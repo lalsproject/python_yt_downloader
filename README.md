@@ -1,6 +1,12 @@
-# Quart YouTube Video Info Fetcher
+# Python YouTube Downloader
 
-A simple web application built using Quart and PyTube to fetch YouTube video information, including the title, URL of the highest resolution stream, and thumbnail URL.
+A simple web application to fetch and download YouTube video information using Quart and PyTube.
+
+## Features
+
+- Fetch YouTube video title
+- Fetch the highest resolution video stream URL
+- Fetch video thumbnail URL
 
 ## Requirements
 
@@ -12,8 +18,8 @@ A simple web application built using Quart and PyTube to fetch YouTube video inf
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/quart-youtube-fetcher.git
-    cd quart-youtube-fetcher
+    git clone https://github.com/lalsproject/python_yt_downloader.git
+    cd python_yt_downloader
     ```
 
 2. Create a virtual environment:
